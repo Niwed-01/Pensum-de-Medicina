@@ -6,161 +6,362 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Pensum MED">
-<meta name="theme-color" content="#f2f2f7">
 <title>Pensum Medicina · UTESA</title>
 <style>
 :root{
-  --blue:#007AFF;--green:#34C759;--red:#FF3B30;--orange:#FF9500;--purple:#AF52DE;
-  --gray:#8E8E93;--gray2:#AEAEB2;--gray6:#F2F2F7;--gray5:#E5E5EA;
-  --bg:#FFFFFF;--surface:#F2F2F7;--sep:rgba(60,60,67,0.12);
+  --blue:#007AFF;--green:#34C759;--red:#FF3B30;--orange:#FF9500;--yellow:#FFCC00;--purple:#AF52DE;
+  --gray:#8E8E93;--gray2:#AEAEB2;--gray5:#E5E5EA;--gray6:#F2F2F7;
+  --bg:#FFF;--surface:#F2F2F7;--sep:rgba(60,60,67,0.12);
   --text:#000;--text2:rgba(60,60,67,0.85);--text3:rgba(60,60,67,0.55);
   --r:12px;--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;
+  --grade-a:#34C759;--grade-b:#007AFF;--grade-c:#FF9500;--grade-f:#FF3B30;
 }
 @media(prefers-color-scheme:dark){:root{
-  --blue:#0A84FF;--green:#30D158;--red:#FF453A;--orange:#FF9F0A;--purple:#BF5AF2;
-  --gray6:#2C2C2E;--gray5:#3A3A3C;--bg:#1C1C1E;--surface:#000;
+  --blue:#0A84FF;--green:#30D158;--red:#FF453A;--orange:#FF9F0A;--yellow:#FFD60A;--purple:#BF5AF2;
+  --gray5:#3A3A3C;--gray6:#2C2C2E;--bg:#1C1C1E;--surface:#000;
   --sep:rgba(84,84,88,0.55);--text:#FFF;--text2:rgba(235,235,245,0.85);--text3:rgba(235,235,245,0.5);
+  --grade-a:#30D158;--grade-b:#0A84FF;--grade-c:#FF9F0A;--grade-f:#FF453A;
 }}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{background:var(--surface)}
-body{font-family:var(--font);background:var(--surface);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom,20px)}
+html,body{background:var(--surface);color:var(--text);font-family:var(--font);min-height:100vh;-webkit-font-smoothing:antialiased}
+body{padding-bottom:calc(env(safe-area-inset-bottom,16px) + 8px)}
 
-/* ── Header ── */
-.app-header{
-  position:sticky;top:0;z-index:200;
-  background:rgba(242,242,247,0.85);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:.5px solid var(--sep);
-  padding-top:env(safe-area-inset-top,0);
-}
-@media(prefers-color-scheme:dark){.app-header{background:rgba(0,0,0,0.8)}}
-.header-inner{padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between}
-.header-title{font-size:17px;font-weight:700;color:var(--text)}
-.header-sub{font-size:11px;color:var(--text3);margin-top:1px}
+/* ── HEADER ── */
+.app-header{position:sticky;top:0;z-index:200;background:rgba(242,242,247,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:.5px solid var(--sep);padding-top:env(safe-area-inset-top,0)}
+@media(prefers-color-scheme:dark){.app-header{background:rgba(0,0,0,0.82)}}
+.hinner{padding:11px 16px;display:flex;align-items:center;gap:10px}
+.htext{flex:1}
+.htitle{font-size:17px;font-weight:700;color:var(--text)}
+.hsub{font-size:11px;color:var(--text3);margin-top:1px}
 
-/* ── Stats / progress ── */
-.prog-card{background:var(--bg);margin:8px 16px;border-radius:var(--r);padding:14px 16px}
+/* ── LEGEND ── */
+.legend{display:flex;gap:6px;padding:10px 16px 2px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* ── PROGRESS ── */
+.prog-card{background:var(--bg);margin:8px 16px 0;border-radius:var(--r);padding:14px 16px}
 .prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
 .prog-label{font-size:13px;color:var(--text3)}
-.prog-pct{font-size:28px;font-weight:700;color:var(--blue)}
+.prog-pct{font-size:26px;font-weight:700;color:var(--blue)}
 .prog-bar-bg{height:7px;background:var(--gray5);border-radius:4px;overflow:hidden}
-.prog-bar-fill{height:100%;background:var(--blue);border-radius:4px;transition:width .4s ease;min-width:0}
-.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 16px 4px}
+.prog-bar-fill{height:100%;background:var(--blue);border-radius:4px;transition:width .4s ease}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 16px 0}
 .stat-card{background:var(--bg);border-radius:var(--r);padding:10px 12px}
 .stat-num{font-size:20px;font-weight:700;color:var(--text)}
 .stat-lbl{font-size:10px;color:var(--text3);margin-top:1px;line-height:1.3}
 
-/* ── Bloque ── */
+/* ── BLOQUE ── */
 .bloque-header{padding:20px 16px 6px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
 
-/* ── Cuatrimestre ── */
-.cuatri-wrap{margin:0 0 2px}
-.cuatri-card{background:var(--bg);border-top:.5px solid var(--sep);border-bottom:.5px solid var(--sep)}
-.cuatri-head{display:flex;align-items:center;padding:13px 14px 13px 16px;cursor:pointer;user-select:none;gap:10px;min-height:56px}
+/* ── CUATRIMESTRE ── */
+.cuatri-card{background:var(--bg);border-top:.5px solid var(--sep);border-bottom:.5px solid var(--sep);margin-bottom:2px}
+.cuatri-head{display:flex;align-items:center;padding:13px 14px 13px 16px;cursor:pointer;user-select:none;gap:10px;min-height:58px}
 .cuatri-head:active{background:var(--gray6)}
-.ct-accent{width:4px;height:34px;border-radius:2px;flex-shrink:0}
+.ct-accent{width:4px;height:36px;border-radius:2px;flex-shrink:0}
 .ct-info{flex:1;min-width:0}
 .ct-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
-.ct-opt{font-size:11px;font-weight:400;color:var(--text3)}
+.ct-avg{font-size:11px;color:var(--text3);margin-top:2px}
 .ct-pill{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--gray5);color:var(--text3);white-space:nowrap;flex-shrink:0}
 .ct-pill.done{background:rgba(52,199,89,.15);color:var(--green)}
 @media(prefers-color-scheme:dark){.ct-pill.done{background:rgba(48,209,88,.2)}}
-.ct-chev{color:var(--gray2);font-size:17px;flex-shrink:0;transition:transform .22s;font-weight:300}
+.ct-chev{color:var(--gray2);font-size:19px;flex-shrink:0;transition:transform .22s}
 .ct-chev.open{transform:rotate(90deg)}
 
-/* ── Subject list ── */
+/* ── SUBJECT LIST ── */
 .slist{display:none;border-top:.5px solid var(--sep)}
 .slist.open{display:block}
 .sitem{border-bottom:.5px solid var(--sep)}
 .sitem:last-child{border-bottom:none}
-.shead{display:flex;align-items:center;padding:11px 14px 11px 20px;cursor:pointer;user-select:none;gap:8px;min-height:48px}
+.shead{display:flex;align-items:center;padding:11px 14px 11px 20px;cursor:pointer;user-select:none;gap:8px;min-height:50px}
 .shead:active{background:var(--gray6)}
 .s-clave{font-size:10px;font-family:'Menlo','SF Mono',monospace;color:var(--text3);width:54px;flex-shrink:0;line-height:1.2}
 .s-name{flex:1;font-size:13.5px;color:var(--text);line-height:1.35}
-.s-badge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--gray5);color:var(--text3);flex-shrink:0;min-width:34px;text-align:center;white-space:nowrap}
+.s-badge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--gray5);color:var(--text3);flex-shrink:0;min-width:38px;text-align:center;white-space:nowrap}
 .s-badge.partial{color:var(--blue);background:rgba(0,122,255,.1)}
 .s-badge.full{color:var(--green);background:rgba(52,199,89,.15)}
-@media(prefers-color-scheme:dark){.s-badge.partial{background:rgba(10,132,255,.2)}.s-badge.full{background:rgba(48,209,88,.2)}}
-.s-arr{color:var(--gray2);font-size:15px;flex-shrink:0;transition:transform .2s;font-weight:300}
+.s-badge.danger{color:var(--red);background:rgba(255,59,48,.1)}
+@media(prefers-color-scheme:dark){.s-badge.partial{background:rgba(10,132,255,.2)}.s-badge.full{background:rgba(48,209,88,.2)}.s-badge.danger{background:rgba(255,69,58,.15)}}
+.s-arr{color:var(--gray2);font-size:15px;flex-shrink:0;transition:transform .2s}
 .s-arr.open{transform:rotate(90deg)}
 .sitem.electiva .s-name{color:var(--text3);font-style:italic}
 
-/* ── Week grid ── */
-.wgrid{display:none;padding:4px 16px 14px 20px;background:var(--gray6)}
+/* ── TEACHER FIELD ── */
+.teacher-row{display:flex;align-items:center;gap:8px;padding:8px 16px 8px 20px;background:var(--gray6);border-bottom:.5px solid var(--sep)}
+.teacher-icon{font-size:14px;flex-shrink:0}
+.teacher-input{flex:1;background:none;border:none;font-size:13px;color:var(--text);font-family:var(--font);outline:none;padding:0;min-width:0}
+.teacher-input::placeholder{color:var(--text3)}
+
+/* ── WEEK GRID ── */
+.wgrid{display:none;padding:8px 16px 14px 20px;background:var(--gray6)}
 .wgrid.open{display:block}
 .wrow{display:flex;gap:5px;margin-bottom:5px}
 .wrow:last-child{margin-bottom:0}
 .wb{
-  flex:1;height:44px;border-radius:10px;cursor:pointer;
+  flex:1;height:50px;border-radius:10px;cursor:pointer;
   border:1.5px solid var(--sep);background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  transition:transform .12s,background .15s;user-select:none;
+  transition:transform .12s,background .18s,border-color .18s;user-select:none;position:relative;overflow:hidden;
 }
-.wb:active{transform:scale(.92)}
-.wb.on{background:var(--green);border-color:transparent}
+.wb:active{transform:scale(.90)}
+.wb.grade-a{background:var(--grade-a);border-color:transparent}
+.wb.grade-b{background:var(--grade-b);border-color:transparent}
+.wb.grade-c{background:var(--grade-c);border-color:transparent}
+.wb.grade-f{background:var(--grade-f);border-color:transparent}
 .wn{font-size:9px;color:var(--text3);font-weight:500;line-height:1}
-.wc{font-size:16px;line-height:1;color:var(--sep)}
-.wb.on .wn{color:rgba(255,255,255,.75)}
-.wb.on .wc{color:#fff}
+.wv{font-size:14px;font-weight:700;line-height:1;color:var(--gray2)}
+.wb.grade-a .wn,.wb.grade-b .wn,.wb.grade-c .wn,.wb.grade-f .wn{color:rgba(255,255,255,.8)}
+.wb.grade-a .wv,.wb.grade-b .wv,.wb.grade-c .wv,.wb.grade-f .wv{color:#fff}
 
-/* ── Footer ── */
-.footer{padding:24px 16px 8px;text-align:center}
+/* ── BOTTOM SHEET ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:900;opacity:0;pointer-events:none;transition:opacity .28s}
+.overlay.open{opacity:1;pointer-events:all}
+.sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:901;
+  background:var(--surface);border-radius:20px 20px 0 0;
+  padding:0 0 env(safe-area-inset-bottom,20px);
+  transform:translateY(105%);
+  transition:transform .36s cubic-bezier(.32,.72,0,1);
+  max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.sheet.open{transform:translateY(0)}
+.sheet-handle{width:36px;height:5px;background:var(--gray5);border-radius:3px;margin:10px auto 0}
+.sheet-header{padding:16px 20px 10px}
+.sheet-week{font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.02em;text-transform:uppercase}
+.sheet-subject{font-size:17px;font-weight:700;color:var(--text);margin-top:2px;line-height:1.25}
+.sheet-clave{font-size:11px;color:var(--text3);font-family:'Menlo','SF Mono',monospace;margin-top:2px}
+.sheet-divider{height:.5px;background:var(--sep);margin:0 20px}
+.sheet-section{padding:14px 20px}
+.sheet-label{font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+/* Grade input row */
+.grade-row{display:flex;align-items:center;gap:12px}
+.grade-input-wrap{position:relative;flex-shrink:0}
+.grade-input{
+  width:90px;height:56px;border-radius:14px;border:2px solid var(--gray5);
+  background:var(--bg);font-size:28px;font-weight:700;font-family:var(--font);
+  color:var(--text);text-align:center;outline:none;
+  transition:border-color .2s,background .2s,color .2s;
+  -moz-appearance:textfield;appearance:textfield;
+}
+.grade-input::-webkit-inner-spin-button,.grade-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.grade-input:focus{border-color:var(--blue)}
+.grade-band{flex:1;border-radius:12px;padding:10px 14px;transition:background .25s}
+.grade-band-label{font-size:13px;font-weight:600;color:#fff;line-height:1.2}
+.grade-band-desc{font-size:11px;color:rgba(255,255,255,.8);margin-top:2px}
+.grade-band.empty{background:var(--gray5)}
+.grade-band.empty .grade-band-label{color:var(--text3)}
+.grade-band.empty .grade-band-desc{color:var(--text3)}
+/* Notes */
+.notes-input{
+  width:100%;min-height:90px;border-radius:12px;border:1.5px solid var(--gray5);
+  background:var(--bg);font-size:14px;font-family:var(--font);color:var(--text);
+  padding:10px 12px;outline:none;resize:none;line-height:1.5;
+  transition:border-color .2s;
+}
+.notes-input:focus{border-color:var(--blue)}
+.notes-input::placeholder{color:var(--text3)}
+/* Sheet buttons */
+.sheet-btns{display:flex;flex-direction:column;gap:8px;padding:4px 20px 10px}
+.btn-save{width:100%;height:50px;border-radius:14px;border:none;background:var(--blue);color:#fff;font-size:16px;font-weight:600;font-family:var(--font);cursor:pointer;transition:opacity .15s}
+.btn-save:active{opacity:.75}
+.btn-clear{width:100%;height:44px;border-radius:14px;border:none;background:var(--gray5);color:var(--red);font-size:15px;font-weight:500;font-family:var(--font);cursor:pointer;transition:opacity .15s}
+.btn-clear:active{opacity:.6}
+
+/* ── FOOTER ── */
+.footer{padding:24px 16px 6px;text-align:center}
 .reset-btn{background:none;border:none;color:var(--red);font-size:15px;font-family:var(--font);cursor:pointer;padding:10px 20px;border-radius:10px}
 .reset-btn:active{background:rgba(255,59,48,.08)}
-.footer-note{font-size:11px;color:var(--text3);margin-top:6px;line-height:1.5}
+.footer-note{font-size:11px;color:var(--text3);margin-top:6px;line-height:1.6}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="app-header">
-  <div class="header-inner">
-    <div>
-      <div class="header-title">Pensum de Medicina</div>
-      <div class="header-sub">UTESA · Vigencia Enero 2024</div>
+  <div class="hinner">
+    <div class="htext">
+      <div class="htitle">Pensum de Medicina</div>
+      <div class="hsub">UTESA · Vigencia 2026 </div>
     </div>
     <div style="font-size:26px">🩺</div>
   </div>
 </div>
 
-<div style="padding-top:8px">
-  <div class="prog-card">
-    <div class="prog-top">
-      <span class="prog-label">Progreso global</span>
-      <span class="prog-pct" id="g-pct">0%</span>
-    </div>
-    <div class="prog-bar-bg"><div class="prog-bar-fill" id="g-bar" style="width:0%"></div></div>
+<!-- LEGEND -->
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--grade-a)"></div>90–100 Sobresaliente</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--grade-b)"></div>80–89 Bueno</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--grade-c)"></div>70–79 Aprobado</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--grade-f)"></div>0–69 Deficiente</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-card">
+  <div class="prog-top"><span class="prog-label">Promedio general</span><span class="prog-pct" id="g-avg">—</span></div>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="g-bar" style="width:0%"></div></div>
+</div>
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-num" id="st-graded">0</div><div class="stat-lbl">Semanas calificadas</div></div>
+  <div class="stat-card"><div class="stat-num" id="st-prog">0</div><div class="stat-lbl">Materias en progreso</div></div>
+  <div class="stat-card"><div class="stat-num" id="st-full">0</div><div class="stat-lbl">Materias completas</div></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="app-content"></div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <button class="reset-btn" onclick="confirmReset()">Reiniciar todo el progreso</button>
+  <div class="footer-note">El progreso se guarda automáticamente en este dispositivo.<br>En Safari: Compartir → "Añadir a pantalla de inicio" para usarla como app.</div>
+</div>
+
+<!-- BOTTOM SHEET -->
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-week" id="sh-week">Semana 1</div>
+    <div class="sheet-subject" id="sh-name">Asignatura</div>
+    <div class="sheet-clave" id="sh-clave">—</div>
   </div>
-
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-num" id="st-weeks">0</div>
-      <div class="stat-lbl">Semanas marcadas</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="st-prog">0</div>
-      <div class="stat-lbl">Materias con avance</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="st-full">0</div>
-      <div class="stat-lbl">Materias completas</div>
+  <div class="sheet-divider"></div>
+  <div class="sheet-section">
+    <div class="sheet-label">Calificación</div>
+    <div class="grade-row">
+      <div class="grade-input-wrap">
+        <input class="grade-input" type="number" id="sh-grade" min="0" max="100" placeholder="—" oninput="onGradeInput()">
+      </div>
+      <div class="grade-band empty" id="sh-band">
+        <div class="grade-band-label" id="sh-band-lbl">Sin calificar</div>
+        <div class="grade-band-desc" id="sh-band-desc">Ingresa una nota del 0 al 100</div>
+      </div>
     </div>
   </div>
-
-  <div id="app-content"></div>
-
-  <div class="footer">
-    <button class="reset-btn" onclick="confirmReset()">Reiniciar todo el progreso</button>
-    <div class="footer-note">El progreso se guarda automáticamente en este dispositivo.<br>En Safari, toca Compartir → "Añadir a pantalla de inicio" para usarla como app.</div>
+  <div class="sheet-divider"></div>
+  <div class="sheet-section">
+    <div class="sheet-label">Notas de la clase</div>
+    <textarea class="notes-input" id="sh-note" placeholder="¿Cómo fue la clase? Temas vistos, observaciones…" rows="4"></textarea>
+  </div>
+  <div class="sheet-btns">
+    <button class="btn-save" onclick="saveSheet()">Guardar</button>
+    <button class="btn-clear" onclick="clearSheet()">Borrar esta semana</button>
   </div>
 </div>
 
 <script>
-const W=14,KEY='pensum_utesa_2024_v1';
-let state={};
-try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+const W=14,KEY='pensum_utesa_2024_v2';
+let state={weeks:{},teachers:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');if(s.weeks)state.weeks=s.weeks;if(s.teachers)state.teachers=s.teachers;}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
-function gw(c){if(!state[c])state[c]=Array(W).fill(false);return state[c]}
 
+// ── Grade helpers ──────────────────────────────────────────────────────────
+function gradeClass(g){
+  if(g===null||g===undefined||g==='')return '';
+  const n=+g;
+  if(n>=90)return 'grade-a';
+  if(n>=80)return 'grade-b';
+  if(n>=70)return 'grade-c';
+  return 'grade-f';
+}
+function gradeBand(g){
+  if(g===null||g===undefined||g==='')return{cls:'empty',lbl:'Sin calificar',desc:'Ingresa una nota del 0 al 100'};
+  const n=+g;
+  if(n>=90)return{cls:'grade-a',lbl:'Sobresaliente',desc:'90 – 100 puntos'};
+  if(n>=80)return{cls:'grade-b',lbl:'Bueno',desc:'80 – 89 puntos'};
+  if(n>=70)return{cls:'grade-c',lbl:'Aprobado',desc:'70 – 79 puntos'};
+  return{cls:'grade-f',lbl:'Deficiente',desc:'0 – 69 puntos — Reprobado'};
+}
+function weekData(clave){
+  if(!state.weeks[clave])state.weeks[clave]=Array(W).fill(null);
+  return state.weeks[clave];
+}
+function subjectAvg(clave){
+  const ws=weekData(clave);
+  const vals=ws.filter(w=>w&&w.g!==null&&w.g!==undefined&&w.g!=='');
+  if(!vals.length)return null;
+  return Math.round(vals.reduce((a,w)=>a+(+w.g),0)/vals.length);
+}
+
+// ── Sheet state ──────────────────────────────────────────────────────────
+let sheetClave='',sheetWeek=0,sheetSubjectName='';
+function openSheet(clave,week,subjectName){
+  sheetClave=clave;sheetWeek=week;sheetSubjectName=subjectName;
+  const ws=weekData(clave);
+  const d=ws[week];
+  document.getElementById('sh-week').textContent='Semana '+(week+1);
+  document.getElementById('sh-name').textContent=subjectName;
+  document.getElementById('sh-clave').textContent=clave;
+  const g=d?d.g:'';
+  const n=d?d.n:'';
+  document.getElementById('sh-grade').value=g!==null&&g!==undefined?g:'';
+  document.getElementById('sh-note').value=n||'';
+  updateBand(g);
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+  setTimeout(()=>document.getElementById('sh-grade').focus(),350);
+}
+function closeSheet(){
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+  document.activeElement&&document.activeElement.blur();
+}
+function onGradeInput(){
+  updateBand(document.getElementById('sh-grade').value);
+}
+function updateBand(g){
+  const b=gradeBand(g);
+  const band=document.getElementById('sh-band');
+  band.className='grade-band '+b.cls;
+  document.getElementById('sh-band-lbl').textContent=b.lbl;
+  document.getElementById('sh-band-desc').textContent=b.desc;
+  const gi=document.getElementById('sh-grade');
+  gi.style.borderColor=b.cls==='empty'?'var(--gray5)':
+    b.cls==='grade-a'?'var(--grade-a)':b.cls==='grade-b'?'var(--grade-b)':
+    b.cls==='grade-c'?'var(--grade-c)':'var(--grade-f)';
+}
+function saveSheet(){
+  const g=document.getElementById('sh-grade').value;
+  const n=document.getElementById('sh-note').value.trim();
+  const ws=weekData(sheetClave);
+  if(g===''&&!n){ws[sheetWeek]=null;}
+  else{ws[sheetWeek]={g:g!==''?+g:null,n:n};}
+  state.weeks[sheetClave]=ws;
+  save();
+  refreshBox(sheetClave,sheetWeek);
+  closeSheet();
+  // find cuatri for this clave
+  D.forEach((bl,bi)=>bl.cs.forEach((c,ci)=>{
+    if(c.as.some(a=>a.c===sheetClave)){
+      const cid='c'+bi+'_'+ci;
+      updCuatri(cid);
+    }
+  }));
+  updGlobal();
+}
+function clearSheet(){
+  if(!confirm('¿Borrar los datos de esta semana?'))return;
+  const ws=weekData(sheetClave);
+  ws[sheetWeek]=null;
+  state.weeks[sheetClave]=ws;
+  save();
+  refreshBox(sheetClave,sheetWeek);
+  closeSheet();
+  D.forEach((bl,bi)=>bl.cs.forEach((c,ci)=>{
+    if(c.as.some(a=>a.c===sheetClave)){updCuatri('c'+bi+'_'+ci);}
+  }));
+  updGlobal();
+}
+function refreshBox(clave,week){
+  const ws=weekData(clave);
+  const d=ws[week];
+  const el=document.getElementById('wb_'+clave+'_'+week);
+  if(!el)return;
+  el.className='wb '+(d&&d.g!==null&&d.g!==undefined?gradeClass(d.g):'');
+  const vEl=el.querySelector('.wv');
+  if(vEl)vEl.textContent=(d&&d.g!==null&&d.g!==undefined)?d.g:(d&&d.n?'📝':'·');
+}
+
+// ── Data ────────────────────────────────────────────────────────────────
 const D=[
 {b:'Bloque Premédica',color:'#007AFF',cs:[
 {n:'Primer cuatrimestre',as:[
@@ -194,242 +395,4 @@ const D=[
 {n:'Sexto cuatrimestre',as:[
 {c:'ING-167',n:'Inglés Profesional'},{c:'MED-344',n:'Medicina Social'},
 {c:'MED-395',n:'Fundamentos de Anatomía'},{c:'MED-396',n:'Lab. Fundamentos de Anatomía'},
-{c:'MED-397',n:'Fundamentos de Fisiología'},{c:'MED-398',n:'Lab. Fundamentos de Fisiología'},
-{c:'MED-872',n:'Fundamentos de Histología'},{c:'MED-874',n:'Lab. Fundamentos de Histología'},
-{c:'SOC-155',n:'Medio Ambiente y Sostenibilidad'},{c:'SOC-160',n:'Ética Profesional'},
-{c:'ELEC-6',n:'Electiva',e:1}]},
-{n:'Electivas Generales Premédica',opt:1,as:[
-{c:'ENF-101',n:'Enfermería Básica'},{c:'MED-496',n:'Emergencias y Desastres'},
-{c:'MED-979',n:'Apreciación Artística'},{c:'MED-986',n:'Salud Sexual y Reproductiva'},
-{c:'MED-994',n:'Deportes (Voleibol, Fútbol, Baloncesto)'},{c:'MED-996',n:'Salud Ocupacional'},
-{c:'SIC-102',n:'Introducción a la Psicología'},{c:'SOC-480',n:'Etiqueta y Protocolo'}]}
-]},
-{b:'Bloque de Ciencias Básicas',color:'#34C759',cs:[
-{n:'Séptimo cuatrimestre',as:[
-{c:'MED-172',n:'Anatomía I'},{c:'MED-175',n:'Lab. Anatomía I'},
-{c:'MED-192',n:'Bioquímica I'},{c:'MED-197',n:'Lab. Bioquímica I'},
-{c:'MED-200',n:'Embriología'},{c:'MED-232',n:'Fisiología I'},
-{c:'MED-235',n:'Lab. Fisiología I'},{c:'MED-862',n:'Histología'},
-{c:'MED-866',n:'Lab. Histología'},{c:'SIC-766',n:'Inteligencia Emocional'},
-{c:'ELEC-7',n:'Electiva',e:1}]},
-{n:'Octavo cuatrimestre',as:[
-{c:'ECO-525',n:'Finanzas Personales'},{c:'MED-212',n:'Anatomía II'},
-{c:'MED-214',n:'Lab. Anatomía II'},{c:'MED-292',n:'Fisiología II'},
-{c:'MED-295',n:'Lab. Fisiología II'},{c:'MED-304',n:'Patología I'},
-{c:'MED-305',n:'Lab. Patología I'},{c:'MED-606',n:'Bioquímica II'},
-{c:'MED-607',n:'Lab. Bioquímica II'},{c:'ELEC-8',n:'Electiva',e:1}]},
-{n:'Noveno cuatrimestre',as:[
-{c:'MED-224',n:'Neuroanatomía'},{c:'MED-225',n:'Lab. Neuroanatomía'},
-{c:'MED-272',n:'Microbiología Médica'},{c:'MED-274',n:'Lab. Microbiología Médica'},
-{c:'MED-312',n:'Patología II'},{c:'MED-315',n:'Lab. Patología II'},
-{c:'MED-322',n:'Farmacología'},{c:'MED-325',n:'Lab. Farmacología'},
-{c:'MED-357',n:'Fisiopatología I'},{c:'MED-964',n:'Investigación en Salud'},
-{c:'ELEC-9',n:'Electiva',e:1}]},
-{n:'Décimo cuatrimestre',as:[
-{c:'ADM-900',n:'Formación de Emprendedores'},{c:'MED-254',n:'Parasitología'},
-{c:'MED-255',n:'Lab. Parasitología'},{c:'MED-264',n:'Semiología Clínica'},
-{c:'MED-267',n:'Práctica de Semiología Clínica'},{c:'MED-358',n:'Fisiopatología II'},
-{c:'MED-450',n:'Nutrición'},{c:'MED-634',n:'Biología Molecular y Genética'},
-{c:'MED-635',n:'Lab. Biología Molecular y Genética'},
-{c:'MED-662',n:'Epidemiología'},{c:'MED-975',n:'Prevención y Promoción de Salud'}]},
-{n:'Décimo primer cuatrimestre',as:[
-{c:'MED-411',n:'Terapéutica'},{c:'MED-414',n:'Prácticas de Terapéutica'},
-{c:'MED-416',n:'Semiología Quirúrgica'},{c:'MED-419',n:'Práctica Semiología Quirúrgica'},
-{c:'MED-506',n:'Bioética'},{c:'MED-930',n:'Psicopatología Clínica'},
-{c:'MED-943',n:'Bioseguridad'},{c:'MED-967',n:'Habilidades Comunicativas Médico-Paciente'},
-{c:'MED-997',n:'Administración de Servicios de Salud'},
-{c:'MED-999',n:'Legislación Médica'},{c:'SOC-140',n:'Relaciones Humanas'}]},
-{n:'Electivas Ciencias Básicas',opt:1,as:[
-{c:'ECO-101',n:'Economía y Salud'},{c:'MED-941',n:'Electrocardiografía'},
-{c:'MED-942',n:'Responsabilidad Médica'},{c:'MED-946',n:'Patología Forense'},
-{c:'MED-949',n:'Auditoría Médica'},{c:'MED-959',n:'Violencia de Género e Intrafamiliar'}]}
-]},
-{b:'Preinternado — Ciencias Clínico-Quirúrgicas',color:'#FF9500',cs:[
-{n:'Décimo segundo cuatrimestre',as:[
-{c:'MED-364',n:'Cardiología'},{c:'MED-365',n:'Práctica de Cardiología'},
-{c:'MED-382',n:'Endocrinología'},{c:'MED-385',n:'Práctica de Endocrinología'},
-{c:'MED-393',n:'Hematología'},{c:'MED-394',n:'Lab. Hematología'},
-{c:'MED-442',n:'Neurología'},{c:'MED-445',n:'Práctica de Neurología'},
-{c:'MED-503',n:'Cirugía General I'},{c:'MED-504',n:'Práctica Cirugía General I'},
-{c:'MED-892',n:'Nefrología'},{c:'MED-895',n:'Práctica de Nefrología'},
-{c:'MED-924',n:'Infectología'},{c:'MED-925',n:'Práctica de Infectología'},
-{c:'ELEC-12',n:'Electiva',e:1}]},
-{n:'Décimo tercer cuatrimestre',as:[
-{c:'MED-244',n:'Psiquiatría'},{c:'MED-245',n:'Práctica de Psiquiatría'},
-{c:'MED-432',n:'Anestesiología'},{c:'MED-434',n:'Práctica de Anestesiología'},
-{c:'MED-472',n:'Reumatología'},{c:'MED-474',n:'Práctica de Reumatología'},
-{c:'MED-478',n:'Imagenología Diagnóstica'},{c:'MED-479',n:'Práctica de Imagenología'},
-{c:'MED-484',n:'Neumología'},{c:'MED-485',n:'Práctica de Neumología'},
-{c:'MED-508',n:'Cirugía General II'},{c:'MED-509',n:'Práctica Cirugía General II'},
-{c:'MED-542',n:'Oftalmología'},{c:'MED-545',n:'Práctica de Oftalmología'},
-{c:'MED-584',n:'Gastroenterología'},{c:'MED-585',n:'Práctica de Gastroenterología'},
-{c:'ELEC-13',n:'Electiva',e:1}]},
-{n:'Décimo cuarto cuatrimestre',as:[
-{c:'MED-342',n:'Medicina Forense'},{c:'MED-376',n:'Ginecología'},
-{c:'MED-377',n:'Práctica de Ginecología'},{c:'MED-378',n:'Obstetricia y Perinatología'},
-{c:'MED-379',n:'Práctica Obstetricia y Perinatología'},
-{c:'MED-404',n:'Dermatología y Venereología'},{c:'MED-405',n:'Práctica Dermatología y Venereología'},
-{c:'MED-524',n:'Ortopedia y Traumatología'},{c:'MED-525',n:'Práctica Ortopedia y Traumatología'},
-{c:'MED-532',n:'Otorrinolaringología'},{c:'MED-535',n:'Práctica Otorrinolaringología'},
-{c:'MED-552',n:'Neurocirugía'},{c:'MED-612',n:'Urología'},
-{c:'MED-615',n:'Práctica de Urología'},{c:'ELEC-14',n:'Electiva',e:1}]},
-{n:'Décimo quinto cuatrimestre',as:[
-{c:'MED-423',n:'Pediatría y Neonatología'},{c:'MED-424',n:'Práctica Pediatría y Neonatología'},
-{c:'MED-427',n:'Geriatría'},{c:'MED-435',n:'Medicina Familiar'},
-{c:'MED-462',n:'Oncología'},{c:'MED-464',n:'Práctica de Oncología'},
-{c:'MED-493',n:'Cuidados Intensivos y Emergencia'},
-{c:'MED-494',n:'Práctica Cuidados Intensivos y Emergencia'},
-{c:'MED-512',n:'Cirugía Torácica y Cardiovascular'},
-{c:'MED-622',n:'Medicina Física y Rehabilitación'},
-{c:'MED-886',n:'Inmunología y Alergología'},{c:'ELEC-15',n:'Electiva',e:1}]},
-{n:'Electivas Ciencias Clínicas y Quirúrgicas',opt:1,as:[
-{c:'MED-931',n:'Toxicología y Toxicomanía'},{c:'MED-932',n:'Cirugía Plástica y Reconstructiva'},
-{c:'MED-953',n:'Medicina del Deporte'},{c:'MED-955',n:'Medicina Tropical'},
-{c:'MED-969',n:'Soporte Vital Básico'},{c:'MED-977',n:'Medicina Basada en Evidencias'},
-{c:'MED-978',n:'Interpretación y Análisis de Datos Clínicos'}]}
-]},
-{b:'Internado Rotatorio',color:'#AF52DE',cs:[
-{n:'Décimo sexto cuatrimestre',as:[
-{c:'MED-005',n:'Anteproyecto de Investigación Médica I'},
-{c:'MED-017',n:'Medicina Social, Comunitaria y Familiar'},{c:'MED-974',n:'Cirugía'}]},
-{n:'Décimo séptimo cuatrimestre',as:[
-{c:'MED-006',n:'Anteproyecto de Investigación Médica II'},
-{c:'MED-018',n:'Psiquiatría'},{c:'MED-952',n:'Medicina Interna'}]},
-{n:'Décimo octavo cuatrimestre',as:[
-{c:'MED-007',n:'Proyecto de Investigación'},
-{c:'MED-973',n:'Ginecología y Obstetricia'},{c:'MED-982',n:'Pediatría'}]}
-]}
-];
-
-function buildWeekBoxes(clave,from,to,cid){
-  let h='';const ws=gw(clave);
-  for(let w=from;w<to;w++){
-    const on=ws[w];
-    h+=`<div class="wb${on?' on':''}" id="wb_${clave}_${w}" onclick="tw('${clave}',${w},'${cid}')">
-      <span class="wn">S${w+1}</span><span class="wc">${on?'✓':'·'}</span>
-    </div>`;
-  }
-  return h;
-}
-
-function build(){
-  const cont=document.getElementById('app-content');
-  D.forEach((bloque,bi)=>{
-    const bdiv=document.createElement('div');
-    bdiv.innerHTML=`<div class="bloque-header">${bloque.b}</div>`;
-    cont.appendChild(bdiv);
-    bloque.cs.forEach((c,ci)=>{
-      const cid='c'+bi+'_'+ci;
-      const wrap=document.createElement('div');
-      wrap.className='cuatri-wrap';
-      const card=document.createElement('div');
-      card.className='cuatri-card';
-      card.innerHTML=`
-        <div class="cuatri-head" onclick="toggleC('${cid}')">
-          <div class="ct-accent" style="background:${bloque.color}"></div>
-          <div class="ct-info">
-            <div class="ct-name">${c.n}${c.opt?' <span class="ct-opt">(electivas)</span>':''}</div>
-          </div>
-          <div class="ct-pill" id="pill_${cid}">—</div>
-          <div class="ct-chev" id="chev_${cid}">›</div>
-        </div>
-        <div class="slist" id="slist_${cid}"></div>
-      `;
-      wrap.appendChild(card);
-      cont.appendChild(wrap);
-      const sl=card.querySelector('#slist_'+cid);
-      c.as.forEach((s,si)=>{
-        const wid='wg_'+cid+'_'+si;
-        const bid2='b_'+cid+'_'+si;
-        const aid='a_'+cid+'_'+si;
-        const item=document.createElement('div');
-        item.className='sitem'+(s.e?' electiva':'');
-        item.innerHTML=`
-          <div class="shead" onclick="toggleS('${wid}','${aid}','${cid}')">
-            <div class="s-clave">${s.c}</div>
-            <div class="s-name">${s.n}</div>
-            <div class="s-badge" id="${bid2}">0/${W}</div>
-            <div class="s-arr" id="${aid}">›</div>
-          </div>
-          <div class="wgrid" id="${wid}">
-            <div class="wrow">${buildWeekBoxes(s.c,0,7,cid)}</div>
-            <div class="wrow">${buildWeekBoxes(s.c,7,14,cid)}</div>
-          </div>
-        `;
-        sl.appendChild(item);
-      });
-    });
-  });
-  updAll();
-}
-
-function toggleC(id){
-  const sl=document.getElementById('slist_'+id);
-  const ch=document.getElementById('chev_'+id);
-  const o=sl.classList.toggle('open');
-  o?ch.classList.add('open'):ch.classList.remove('open');
-}
-function toggleS(wid,aid,cid){
-  document.getElementById(wid).classList.toggle('open');
-  document.getElementById(aid).classList.toggle('open');
-}
-
-function tw(clave,week,cid){
-  const ws=gw(clave);ws[week]=!ws[week];state[clave]=ws;save();
-  const box=document.getElementById('wb_'+clave+'_'+week);
-  if(box){
-    if(ws[week]){box.classList.add('on');box.querySelector('.wc').textContent='✓';}
-    else{box.classList.remove('on');box.querySelector('.wc').textContent='·';}
-  }
-  updCuatri(cid);updGlobal();
-}
-
-function updBadge(cid,si,clave){
-  const ws=gw(clave);const cnt=ws.filter(Boolean).length;
-  const el=document.getElementById('b_'+cid+'_'+si);
-  if(!el)return;
-  el.textContent=cnt+'/'+W;
-  el.className='s-badge'+(cnt===W?' full':cnt>0?' partial':'');
-}
-
-function updCuatri(cid){
-  const pts=cid.replace('c','').split('_');
-  const bi=+pts[0],ci=+pts[1];
-  const c=D[bi].cs[ci];
-  let tot=0,chk=0;
-  c.as.forEach((s,si)=>{
-    const ws=gw(s.c);const cnt=ws.filter(Boolean).length;
-    tot+=W;chk+=cnt;updBadge(cid,si,s.c);
-  });
-  const pill=document.getElementById('pill_'+cid);
-  if(pill){pill.textContent=chk+'/'+tot;pill.className='ct-pill'+(chk===tot&&tot>0?' done':'');}
-}
-
-function updAll(){D.forEach((_,bi)=>D[bi].cs.forEach((_,ci)=>updCuatri('c'+bi+'_'+ci)));updGlobal();}
-
-function updGlobal(){
-  let tot=0,chk=0,prog=0,full=0;
-  D.forEach(b=>b.cs.forEach(c=>c.as.forEach(s=>{
-    const ws=gw(s.c);const cnt=ws.filter(Boolean).length;
-    tot+=W;chk+=cnt;if(cnt>0)prog++;if(cnt===W)full++;
-  })));
-  const pct=tot?Math.round(chk/tot*100):0;
-  document.getElementById('g-pct').textContent=pct+'%';
-  document.getElementById('g-bar').style.width=pct+'%';
-  document.getElementById('st-weeks').textContent=chk;
-  document.getElementById('st-prog').textContent=prog;
-  document.getElementById('st-full').textContent=full;
-}
-
-function confirmReset(){
-  if(confirm('¿Reiniciar todo el progreso?\nEsta acción no se puede deshacer.')){
-    state={};save();
-    document.getElementById('app-content').innerHTML='';
-    build();
-  }
-}
-
-build();
-</script>
-</body>
-</html>
+{c:'M
